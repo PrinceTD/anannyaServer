@@ -7,6 +7,13 @@ app.get("/", (req, res)=>{
     res.send('hello from my  busad first')
 });
 
+
+app.get('/users', (req, res)=>{
+res.send("hear us ")
+});
+
+
+
 app.listen(port, ()=>{
     console.log("listing ", port);
 });
