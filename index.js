@@ -20,6 +20,19 @@ async function run() {
         const database = client.db('anannya-fashion');
         const usersCollection = database.collection("users");
 
+        // user api 
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email }
+            const user = await usersCollection.findOne(query);
+            let isAdmin = false;
+            if (user?.role === 'admin') {
+                isAdmin = true
+            }
+            res.json({
+                admin: isAdmin
+            });
+        })
 
         app.post('/users', async (req, res) => {
             const user = req.body;
@@ -44,7 +57,9 @@ async function run() {
             const updateDoc = { $set: { role: 'admin' } };
             const result = await usersCollection.updateOne(filter, updateDoc);
             res.json(result);
-        })
+        });
+
+
 
 
         console.log("database succfully")
