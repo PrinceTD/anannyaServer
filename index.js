@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express()
+const ObjectId = require('mongodb').ObjectId
 var cors = require('cors')
 const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config()
@@ -19,6 +20,63 @@ async function run() {
         await client.connect();
         const database = client.db('anannya-fashion');
         const usersCollection = database.collection("users");
+        const jewellaryEarringCollection = database.collection("EarRing");
+        const necklaceCollection = database.collection("necklace");
+
+
+
+        // necklace
+        app.post("/necklace", async (req, res) => {
+            const necklace = req.body;
+            console.log(necklace);
+            const result = await necklaceCollection.insertOne(necklace);
+            console.log(result);
+            res.send(result);
+        });
+
+        app.get('/necklace', async (req, res) => {
+            const necklaceAdd = necklaceCollection.find({});
+            const Addnecklace = await necklaceAdd.toArray();
+            res.json(Addnecklace)
+        });
+
+        app.get("/necklace/:id", async (req, res) => {
+            const id = req.params.id;
+            console.log("hitting id", id);
+            const query = { _id: ObjectId(id) };
+            const necklaceProduct = await necklaceCollection.findOne(query)
+            res.json(necklaceProduct);
+        });
+
+        // ear ring
+
+
+
+        app.post("/earring", async (req, res) => {
+            const ring = req.body;
+            console.log(ring);
+            const result = await jewellaryEarringCollection.insertOne(ring);
+            res.send(result);
+        });
+
+        app.get('/earring', async (req, res) => {
+            const earRing = jewellaryEarringCollection.find({});
+            const ring = await earRing.toArray();
+            res.json(ring)
+        });
+
+        app.get("/earring/:id", async (req, res) => {
+            const id = req.params.id;
+            console.log("hitting id", id);
+            const query = { _id: ObjectId(id) };
+            const earProduct = await jewellaryEarringCollection.findOne(query)
+            res.json(earProduct);
+        });
+
+
+
+
+
 
         // user api 
         app.get('/users/:email', async (req, res) => {
@@ -37,7 +95,7 @@ async function run() {
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
-            console.log(result);
+
             res.json(result);
         });
 
