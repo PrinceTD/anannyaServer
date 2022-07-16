@@ -48,6 +48,13 @@ async function run() {
             res.json(necklaceProduct);
         });
 
+        app.delete("/nacklace/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await jewellaryEarringCollection.deleteOne(query);
+            res.json(product);
+        });
+
         // ear ring
 
 
@@ -73,7 +80,12 @@ async function run() {
             res.json(earProduct);
         });
 
-
+        app.delete("/earring/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await jewellaryEarringCollection.deleteOne(query);
+            res.json(product);
+        });
 
 
 
