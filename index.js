@@ -28,9 +28,8 @@ async function run() {
         // necklace
         app.post("/necklace", async (req, res) => {
             const necklace = req.body;
-            console.log(necklace);
+            // console.log(necklace);
             const result = await necklaceCollection.insertOne(necklace);
-            console.log(result);
             res.send(result);
         });
 
@@ -42,7 +41,7 @@ async function run() {
 
         app.get("/necklace/:id", async (req, res) => {
             const id = req.params.id;
-            console.log("hitting id", id);
+            // console.log("hitting id", id);
             const query = { _id: ObjectId(id) };
             const necklaceProduct = await necklaceCollection.findOne(query)
             res.json(necklaceProduct);
