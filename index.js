@@ -4,10 +4,12 @@ const ObjectId = require('mongodb').ObjectId
 var cors = require('cors')
 const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config()
+const fileUpload = require('express-fileupload');
 const port = process.env.PORT || 5000
 
 app.use(cors());
 app.use(express.json());
+app.use(fileUpload());
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.gfnwb7o.mongodb.net/?retryWrites=true&w=majority`;
@@ -22,7 +24,17 @@ async function run() {
         const usersCollection = database.collection("users");
         const jewellaryEarringCollection = database.collection("EarRing");
         const necklaceCollection = database.collection("necklace");
+        const KurtiCollection = database.collection("kurti");
 
+
+
+
+        // kurti 
+        app.post("/kurti", async (req, res) => {
+           console.log('body', req.body);
+           console.log('files', req.files);
+           res.json({success: true});
+        });
 
 
         // necklace
@@ -54,13 +66,15 @@ async function run() {
             res.json(product);
         });
 
+
+
+
         // ear ring
 
 
 
         app.post("/earring", async (req, res) => {
             const ring = req.body;
-            console.log(ring);
             const result = await jewellaryEarringCollection.insertOne(ring);
             res.send(result);
         });
@@ -73,7 +87,6 @@ async function run() {
 
         app.get("/earring/:id", async (req, res) => {
             const id = req.params.id;
-            console.log("hitting id", id);
             const query = { _id: ObjectId(id) };
             const earProduct = await jewellaryEarringCollection.findOne(query)
             res.json(earProduct);
