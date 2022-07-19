@@ -30,10 +30,31 @@ async function run() {
 
 
         // kurti 
+
+        app.get('/kurti', async (req, res) => {
+            const cursor = KurtiCollection.find({})
+            const kurti = await cursor.toArray();
+            res.json(kurti);
+        })
+
         app.post("/kurti", async (req, res) => {
-           console.log('body', req.body);
-           console.log('files', req.files);
-           res.json({success: true});
+            const name = req.body.name;
+            const details = req.body.details;
+            const price = req.body.price;
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const kurti = {
+                name,
+                details,
+                price,
+                img: imgBuffer
+            }
+            const result = await KurtiCollection.insertOne(kurti);
+
+
+            res.json(result);
         });
 
 
