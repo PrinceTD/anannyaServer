@@ -37,6 +37,22 @@ async function run() {
             res.json(kurti);
         })
 
+        app.get("/kurti/:id", async (req, res) => {
+            const id = req.params.id;
+
+            const query = { _id: ObjectId(id) };
+            const kurtiProduct = await KurtiCollection.findOne(query)
+            res.json(kurtiProduct);
+        });
+
+        app.delete("/kurti/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await KurtiCollection.deleteOne(query);
+            res.json(product);
+        });
+
+
         app.post("/kurti", async (req, res) => {
             const name = req.body.name;
             const details = req.body.details;
