@@ -76,10 +76,23 @@ async function run() {
 
         // necklace
         app.post("/necklace", async (req, res) => {
-            const necklace = req.body;
-            // console.log(necklace);
-            const result = await necklaceCollection.insertOne(necklace);
-            res.send(result);
+            const name = req.body.name;
+            const details = req.body.details;
+            const price = req.body.price;
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const kurti = {
+                name,
+                details,
+                price,
+                img: imgBuffer
+            }
+            const result = await necklaceCollection.insertOne(kurti);
+
+
+            res.json(result);
         });
 
         app.get('/necklace', async (req, res) => {
@@ -111,9 +124,21 @@ async function run() {
 
 
         app.post("/earring", async (req, res) => {
-            const ring = req.body;
-            const result = await jewellaryEarringCollection.insertOne(ring);
-            res.send(result);
+            const name = req.body.name;
+            const details = req.body.details;
+            const price = req.body.price;
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const kurti = {
+                name,
+                details,
+                price,
+                img: imgBuffer
+            }
+            const result = await jewellaryEarringCollection.insertOne(kurti);
+            res.json(result);
         });
 
         app.get('/earring', async (req, res) => {
