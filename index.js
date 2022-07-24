@@ -25,8 +25,51 @@ async function run() {
         const jewellaryEarringCollection = database.collection("EarRing");
         const necklaceCollection = database.collection("necklace");
         const KurtiCollection = database.collection("kurti");
+        const bestSellsCollection = database.collection("BestSells");
 
 
+
+        // bestSells
+        app.post("/bestsells", async (req, res) => {
+            const name = req.body.name;
+            const details = req.body.details;
+            const price = req.body.price;
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const kurti = {
+                name,
+                details,
+                price,
+                img: imgBuffer
+            }
+            const result = await bestSellsCollection.insertOne(kurti);
+
+
+            res.json(result);
+            console.log(result)
+        });
+        app.get('/bestsells', async (req, res) => {
+            const cursor = bestSellsCollection.find({})
+            const bestSells = await cursor.toArray();
+            res.json(bestSells);
+        })
+
+        app.get("/bestsells/:id", async (req, res) => {
+            const id = req.params.id;
+
+            const query = { _id: ObjectId(id) };
+            const BestSellsProduct = await bestSellsCollection.findOne(query)
+            res.json(BestSellsProduct);
+        });
+
+        app.delete("/bestsells/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await bestSellsCollection.deleteOne(query);
+            res.json(product);
+        });
 
 
         // kurti 
