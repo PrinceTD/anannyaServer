@@ -26,8 +26,52 @@ async function run() {
         const necklaceCollection = database.collection("necklace");
         const KurtiCollection = database.collection("kurti");
         const bestSellsCollection = database.collection("BestSells");
+        const sareeCollection = database.collection('saree')
 
 
+
+        // saree
+
+        app.post("/saree", async (req, res) => {
+            const name = req.body.name;
+            const details = req.body.details;
+            const price = req.body.price;
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const saree = {
+                name,
+                details,
+                price,
+                img: imgBuffer
+            }
+            const result = await sareeCollection.insertOne(saree);
+
+
+            res.json(result);
+            console.log(result)
+        });
+
+        app.get('/saree', async (req, res) => {
+            const cursor = sareeCollection.find({})
+            const saree = await cursor.toArray();
+            res.json(saree);
+        })
+
+        app.get("/saree/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const sareeCollection = await sareeCollection.findOne(query)
+            res.json(sareeCollection);
+        });
+
+        app.delete("/saree/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await sareeCollection.deleteOne(query);
+            res.json(product);
+        });
 
         // bestSells
         app.post("/bestsells", async (req, res) => {
@@ -48,8 +92,9 @@ async function run() {
 
 
             res.json(result);
-            console.log(result)
+            // console.log(result)
         });
+
         app.get('/bestsells', async (req, res) => {
             const cursor = bestSellsCollection.find({})
             const bestSells = await cursor.toArray();
