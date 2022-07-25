@@ -26,9 +26,69 @@ async function run() {
         const necklaceCollection = database.collection("necklace");
         const KurtiCollection = database.collection("kurti");
         const bestSellsCollection = database.collection("BestSells");
-        const sareeCollection = database.collection('saree')
+        const bannerCollection = database.collection("banner");
+        const sareeCollection = database.collection('saree');
+        // const cokerCollection = database.collection('coker');
 
 
+        // coker
+        // app.post("/coker", async (req, res) => {
+        //     const name = req.body.name;
+        //     const details = req.body.details;
+        //     const price = req.body.price;
+        //     const pic = req.files.img;
+        //     const picData = pic.data;
+        //     const encodedPic = picData.toString('base64');
+        //     const imgBuffer = Buffer.from(encodedPic, 'base64');
+        //     const coker = {
+        //         name,
+        //         details,
+        //         price,
+        //         img: imgBuffer
+        //     }
+        //     const result = await cokerCollection.insertOne(coker);
+
+
+        //     res.json(result);
+        //     console.log(result);
+
+        // });
+
+        // banner
+        app.post("/banner", async (req, res) => {
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const banner = {
+                img: imgBuffer
+            }
+            const result = await bannerCollection.insertOne(banner);
+
+
+            res.json(result);
+            console.log(result)
+
+        });
+        app.get('/banner', async (req, res) => {
+            const cursor = bannerCollection.find({})
+            const banner = await cursor.toArray();
+            res.json(banner);
+        })
+
+        app.get("/banner/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const bannerCollections = await bannerCollection.findOne(query)
+            res.json(bannerCollections);
+        });
+
+        app.delete("/banner/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await bannerCollection.deleteOne(query);
+            res.json(product);
+        });
 
         // saree
 
@@ -50,7 +110,7 @@ async function run() {
 
 
             res.json(result);
-            console.log(result)
+
         });
 
         app.get('/saree', async (req, res) => {
