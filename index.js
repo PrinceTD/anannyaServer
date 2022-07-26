@@ -27,6 +27,7 @@ async function run() {
         const KurtiCollection = database.collection("kurti");
         const bestSellsCollection = database.collection("BestSells");
         const bannerCollection = database.collection("banner");
+        const NewInCollection = database.collection("newin");
         const sareeCollection = database.collection('saree');
         // const cokerCollection = database.collection('coker');
 
@@ -53,6 +54,50 @@ async function run() {
         //     console.log(result);
 
         // });
+
+
+        // newin
+        app.post("/newin", async (req, res) => {
+            const name = req.body.name;
+            const details = req.body.details;
+            const price = req.body.price;
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const newin = {
+                name,
+                details,
+                price,
+                img: imgBuffer
+            }
+            const result = await NewInCollection.insertOne(newin);
+
+
+            res.json(result);
+        });
+
+        app.get('/newin', async (req, res) => {
+            const cursor = NewInCollection.find({})
+            const newP = await cursor.toArray();
+            res.json(newP);
+        })
+
+        app.get("/newin/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const NewInCollections = await NewInCollection.findOne(query)
+            res.json(NewInCollections);
+        });
+
+        app.delete("/newin/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await NewInCollection.deleteOne(query);
+            res.json(product);
+        });
+
+
 
         // banner
         app.post("/banner", async (req, res) => {
