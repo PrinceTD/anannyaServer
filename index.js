@@ -29,32 +29,179 @@ async function run() {
         const bannerCollection = database.collection("banner");
         const NewInCollection = database.collection("newin");
         const sareeCollection = database.collection('saree');
-        // const cokerCollection = database.collection('coker');
+        const sawalarCollection = database.collection('sawalarkameez');
+        const blouseCollection = database.collection('blouse');
+        const cokerCollection = database.collection('coker');
+        const packageCollection = database.collection('package');
+
+
+        // package
+        app.post("/package", async (req, res) => {
+            const name = req.body.name;
+            const details = req.body.details;
+            const price = req.body.price;
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const package = {
+                name,
+                details,
+                price,
+                img: imgBuffer
+            }
+            const result = await packageCollection.insertOne(package);
+
+
+            res.json(result);
+
+        });
+        app.get('/package', async (req, res) => {
+            const cursor = packageCollection.find({})
+            const package = await cursor.toArray();
+            res.json(package);
+        })
+
+        app.get("/package/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const packageCollections = await packageCollection.findOne(query)
+            res.json(packageCollections);
+        });
+
+        app.delete("/package/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await packageCollection.deleteOne(query);
+            res.json(product);
+        });
 
 
         // coker
-        // app.post("/coker", async (req, res) => {
-        //     const name = req.body.name;
-        //     const details = req.body.details;
-        //     const price = req.body.price;
-        //     const pic = req.files.img;
-        //     const picData = pic.data;
-        //     const encodedPic = picData.toString('base64');
-        //     const imgBuffer = Buffer.from(encodedPic, 'base64');
-        //     const coker = {
-        //         name,
-        //         details,
-        //         price,
-        //         img: imgBuffer
-        //     }
-        //     const result = await cokerCollection.insertOne(coker);
+        app.post("/coker", async (req, res) => {
+            const name = req.body.name;
+            const details = req.body.details;
+            const price = req.body.price;
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const coker = {
+                name,
+                details,
+                price,
+                img: imgBuffer
+            }
+            const result = await cokerCollection.insertOne(coker);
 
 
-        //     res.json(result);
-        //     console.log(result);
+            res.json(result);
+            console.log(result);
 
-        // });
+        });
+        app.get('/coker', async (req, res) => {
+            const cursor = cokerCollection.find({})
+            const coker = await cursor.toArray();
+            res.json(coker);
+        })
 
+        app.get("/coker/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const cokerCollections = await cokerCollection.findOne(query)
+            res.json(cokerCollections);
+        });
+
+        app.delete("/coker/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await cokerCollection.deleteOne(query);
+            res.json(product);
+        });
+
+
+        // Blouse
+        app.post("/blouse", async (req, res) => {
+            const name = req.body.name;
+            const details = req.body.details;
+            const price = req.body.price;
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const blouse = {
+                name,
+                details,
+                price,
+                img: imgBuffer
+            }
+            const result = await blouseCollection.insertOne(blouse);
+
+
+            res.json(result);
+            // console.log(result)
+        });
+        app.get('/blouse', async (req, res) => {
+            const cursor = blouseCollection.find({})
+            const blouse = await cursor.toArray();
+            res.json(blouse);
+        })
+
+        app.get("/blouse/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const blouseCollections = await blouseCollection.findOne(query)
+            res.json(blouseCollections);
+        });
+
+        app.delete("/blouse/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await blouseCollection.deleteOne(query);
+            res.json(product);
+        });
+
+        // sawalar Kameez
+        app.post("/sawalar", async (req, res) => {
+            const name = req.body.name;
+            const details = req.body.details;
+            const price = req.body.price;
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const sawalar = {
+                name,
+                details,
+                price,
+                img: imgBuffer
+            }
+            const result = await sawalarCollection.insertOne(sawalar);
+
+
+            res.json(result);
+            // console.log(result)
+        });
+
+        app.get('/sawalar', async (req, res) => {
+            const cursor = sawalarCollection.find({})
+            const sawalar = await cursor.toArray();
+            res.json(sawalar);
+        })
+
+        app.get("/sawalar/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const sawalarCollections = await sawalarCollection.findOne(query)
+            res.json(sawalarCollections);
+        });
+
+        app.delete("/sawalar/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await sawalarCollection.deleteOne(query);
+            res.json(product);
+        });
 
         // newin
         app.post("/newin", async (req, res) => {
