@@ -33,7 +33,49 @@ async function run() {
         const blouseCollection = database.collection('blouse');
         const cokerCollection = database.collection('coker');
         const packageCollection = database.collection('package');
+        const ornaCollection = database.collection('orna');
 
+        // orna
+        app.post("/orna", async (req, res) => {
+            const name = req.body.name;
+            const details = req.body.details;
+            const price = req.body.price;
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const orna = {
+                name,
+                details,
+                price,
+                img: imgBuffer
+            }
+            const result = await ornaCollection.insertOne(orna);
+
+
+            res.json(result);
+            console.log(result)
+
+        });
+        app.get('/orna', async (req, res) => {
+            const cursor = ornaCollection.find({})
+            const orna = await cursor.toArray();
+            res.json(orna);
+        })
+
+        app.get("/orna/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const ornaCollections= await ornaCollection.findOne(query)
+            res.json(ornaCollections);
+        });
+
+        app.delete("/orna/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await ornaCollection.deleteOne(query);
+            res.json(product);
+        });
 
         // package
         app.post("/package", async (req, res) => {
