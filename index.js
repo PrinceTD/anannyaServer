@@ -487,14 +487,14 @@ async function run() {
             const id = req.params.id;
             // console.log("hitting id", id);
             const query = { _id: ObjectId(id) };
-            const necklaceProduct = await necklaceCollection.findOne(query)
-            res.json(necklaceProduct);
+            const necklaceProducts = await necklaceCollection.findOne(query)
+            res.json(necklaceProducts);
         });
 
         app.delete("/nacklace/:id", async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const product = await jewellaryEarringCollection.deleteOne(query);
+            const product = await necklaceCollection.deleteOne(query);
             res.json(product);
         });
 
@@ -513,14 +513,15 @@ async function run() {
             const picData = pic.data;
             const encodedPic = picData.toString('base64');
             const imgBuffer = Buffer.from(encodedPic, 'base64');
-            const kurti = {
+            const earRing = {
                 name,
                 details,
                 price,
                 img: imgBuffer
             }
-            const result = await jewellaryEarringCollection.insertOne(kurti);
+            const result = await jewellaryEarringCollection.insertOne(earRing);
             res.json(result);
+            console.log(result)
         });
 
         app.get('/earring', async (req, res) => {
