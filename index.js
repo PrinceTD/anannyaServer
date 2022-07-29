@@ -35,7 +35,47 @@ async function run() {
         const cokerCollection = database.collection('coker');
         const packageCollection = database.collection('package');
         const ornaCollection = database.collection('orna');
+        const photoCollection = database.collection('photo');
 
+        // photo
+        app.post("/photo", async (req, res) => {
+            const name = req.body.name;
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const photo = {
+                name,
+                img: imgBuffer
+            }
+            const result = await photoCollection.insertOne(photo);
+
+
+            res.json(result);
+            console.log(result)
+
+        });
+        app.get('/photo', async (req, res) => {
+            const cursor = photoCollection.find({})
+            const orna = await cursor.toArray();
+            res.json(orna);
+        })
+
+        app.get("/photo/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const photoCollections = await photoCollection.findOne(query)
+            res.json(photoCollections);
+        });
+
+        app.delete("/photo/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const photo = await photoCollection.deleteOne(query);
+            res.json(photo);
+        });
+
+        
         // orna
         app.post("/orna", async (req, res) => {
             const name = req.body.name;
@@ -67,7 +107,7 @@ async function run() {
         app.get("/orna/:id", async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const ornaCollections= await ornaCollection.findOne(query)
+            const ornaCollections = await ornaCollection.findOne(query)
             res.json(ornaCollections);
         });
 
