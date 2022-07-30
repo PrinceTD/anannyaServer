@@ -24,7 +24,7 @@ async function run() {
         const database = client.db('anannya-fashion');
         const usersCollection = database.collection("users");
         const jewellaryEarringCollection = database.collection("EarRing");
-  
+
         const KurtiCollection = database.collection("kurti");
         const bestSellsCollection = database.collection("BestSells");
         const bannerCollection = database.collection("banner");
@@ -37,8 +37,51 @@ async function run() {
         const ornaCollection = database.collection('orna');
         const photoCollection = database.collection('photo');
         const newNacklaceCollection = database.collection('nacklaceNew');
+        const othersCollection = database.collection('others');
 
 
+        // others
+        app.post("/other", async (req, res) => {
+            const name = req.body.name;
+            const details = req.body.details;
+            const price = req.body.price;
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const other = {
+                name,
+                details,
+                price,
+                img: imgBuffer
+            }
+            const result = await othersCollection.insertOne(other);
+
+
+            res.json(result);
+            console.log(result)
+
+        });
+
+        app.get('/other', async (req, res) => {
+            const cursor = othersCollection.find({})
+            const other = await cursor.toArray();
+            res.json(other);
+        })
+
+        app.get("/other/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const other = await othersCollection.findOne(query)
+            res.json(other);
+        });
+
+        app.delete("/other/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await othersCollection.deleteOne(query);
+            res.json(product);
+        });
 
         // newMacklace
         app.post("/newnacklace", async (req, res) => {
@@ -121,8 +164,8 @@ async function run() {
             res.json(photo);
         });
 
-        
-        
+
+
         // orna
         app.post("/orna", async (req, res) => {
             const name = req.body.name;
