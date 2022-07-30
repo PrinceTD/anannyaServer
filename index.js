@@ -24,7 +24,7 @@ async function run() {
         const database = client.db('anannya-fashion');
         const usersCollection = database.collection("users");
         const jewellaryEarringCollection = database.collection("EarRing");
-        const necklaceCollection = database.collection("necklace");
+  
         const KurtiCollection = database.collection("kurti");
         const bestSellsCollection = database.collection("BestSells");
         const bannerCollection = database.collection("banner");
@@ -36,6 +36,52 @@ async function run() {
         const packageCollection = database.collection('package');
         const ornaCollection = database.collection('orna');
         const photoCollection = database.collection('photo');
+        const newNacklaceCollection = database.collection('nacklaceNew');
+
+
+
+        // newMacklace
+        app.post("/newnacklace", async (req, res) => {
+            const name = req.body.name;
+            const details = req.body.details;
+            const price = req.body.price;
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const nacklace = {
+                name,
+                details,
+                price,
+                img: imgBuffer
+            }
+            const result = await newNacklaceCollection.insertOne(nacklace);
+
+
+            res.json(result);
+            console.log(result)
+
+        });
+        app.get('/newnacklace', async (req, res) => {
+            const cursor = newNacklaceCollection.find({})
+            const nacklace = await cursor.toArray();
+            res.json(nacklace);
+        })
+
+        app.get("/newnacklace/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const nacklace = await newNacklaceCollection.findOne(query)
+            res.json(nacklace);
+        });
+
+        app.delete("/newnacklace/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await newNacklaceCollection.deleteOne(query);
+            res.json(product);
+        });
+
 
         // photo
         app.post("/photo", async (req, res) => {
@@ -75,6 +121,7 @@ async function run() {
             res.json(photo);
         });
 
+        
         
         // orna
         app.post("/orna", async (req, res) => {
@@ -495,51 +542,6 @@ async function run() {
 
             res.json(result);
         });
-
-
-        // necklace
-        app.post("/necklace", async (req, res) => {
-            const name = req.body.name;
-            const details = req.body.details;
-            const price = req.body.price;
-            const pic = req.files.img;
-            const picData = pic.data;
-            const encodedPic = picData.toString('base64');
-            const imgBuffer = Buffer.from(encodedPic, 'base64');
-            const kurti = {
-                name,
-                details,
-                price,
-                img: imgBuffer
-            }
-            const result = await necklaceCollection.insertOne(kurti);
-
-
-            res.json(result);
-        });
-
-        app.get('/necklace', async (req, res) => {
-            const necklaceAdd = necklaceCollection.find({});
-            const Addnecklace = await necklaceAdd.toArray();
-            res.json(Addnecklace)
-        });
-
-        app.get("/necklace/:id", async (req, res) => {
-            const id = req.params.id;
-            // console.log("hitting id", id);
-            const query = { _id: ObjectId(id) };
-            const necklaceProducts = await necklaceCollection.findOne(query)
-            res.json(necklaceProducts);
-        });
-
-        app.delete("/nacklace/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const product = await necklaceCollection.deleteOne(query);
-            res.json(product);
-        });
-
-
 
 
         // ear ring
