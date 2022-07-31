@@ -24,22 +24,65 @@ async function run() {
         const database = client.db('anannya-fashion');
         const usersCollection = database.collection("users");
         const jewellaryEarringCollection = database.collection("EarRing");
-
         const KurtiCollection = database.collection("kurti");
-        const bestSellsCollection = database.collection("BestSells");
+        // const bestSellsCollection = database.collection("BestSells");
         const bannerCollection = database.collection("banner");
         const NewInCollection = database.collection("newin");
-        const sareeCollection = database.collection('saree');
-        const sawalarCollection = database.collection('sawalarkameez');
-        const blouseCollection = database.collection('blouse');
+        // const sareeCollection = database.collection('saree');
+        // const sawalarCollection = database.collection('sawalarkameez');
+        // const blouseCollection = database.collection('blouse');
         const cokerCollection = database.collection('coker');
-        const packageCollection = database.collection('package');
-        const ornaCollection = database.collection('orna');
+        // const packageCollection = database.collection('package');
+        // const ornaCollection = database.collection('orna');
         const photoCollection = database.collection('photo');
-        const newNacklaceCollection = database.collection('nacklaceNew');
         const othersCollection = database.collection('others');
+        const NecklacesCollection = database.collection('necklecs');
+
+        // necklaces
+
+        app.post("/necklecs", async (req, res) => {
+            const name = req.body.name;
+            const details = req.body.details;
+            const price = req.body.price;
+            const pic = req.files.img;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+            const nack = {
+                name,
+                details,
+                price,
+                img: imgBuffer
+            }
+            const result = await NecklacesCollection.insertOne(nack);
 
 
+            res.json(result);
+            console.log(result)
+
+        });
+        app.get('/necklecs', async (req, res) => {
+            const cursor = NecklacesCollection.find({})
+            const neck = await cursor.toArray();
+            res.json(neck);
+        })
+
+        app.get("/necklecs/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const necklaces = await NecklacesCollection.findOne(query)
+            res.json(necklaces);
+        });
+
+        app.delete("/necklecs/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await NecklacesCollection.deleteOne(query);
+            res.json(product);
+        });
+
+
+        
         // others
         app.post("/other", async (req, res) => {
             const name = req.body.name;
@@ -84,47 +127,6 @@ async function run() {
         });
 
         // newMacklace
-        app.post("/newnacklace", async (req, res) => {
-            const name = req.body.name;
-            const details = req.body.details;
-            const price = req.body.price;
-            const pic = req.files.img;
-            const picData = pic.data;
-            const encodedPic = picData.toString('base64');
-            const imgBuffer = Buffer.from(encodedPic, 'base64');
-            const nacklace = {
-                name,
-                details,
-                price,
-                img: imgBuffer
-            }
-            const result = await newNacklaceCollection.insertOne(nacklace);
-
-
-            res.json(result);
-            console.log(result)
-
-        });
-        app.get('/newnacklace', async (req, res) => {
-            const cursor = newNacklaceCollection.find({})
-            const nacklace = await cursor.toArray();
-            res.json(nacklace);
-        })
-
-        app.get("/newnacklace/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const nacklace = await newNacklaceCollection.findOne(query)
-            res.json(nacklace);
-        });
-
-        app.delete("/newnacklace/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const product = await newNacklaceCollection.deleteOne(query);
-            res.json(product);
-        });
-
 
         // photo
         app.post("/photo", async (req, res) => {
@@ -167,87 +169,87 @@ async function run() {
 
 
         // orna
-        app.post("/orna", async (req, res) => {
-            const name = req.body.name;
-            const details = req.body.details;
-            const price = req.body.price;
-            const pic = req.files.img;
-            const picData = pic.data;
-            const encodedPic = picData.toString('base64');
-            const imgBuffer = Buffer.from(encodedPic, 'base64');
-            const orna = {
-                name,
-                details,
-                price,
-                img: imgBuffer
-            }
-            const result = await ornaCollection.insertOne(orna);
+        // app.post("/orna", async (req, res) => {
+        //     const name = req.body.name;
+        //     const details = req.body.details;
+        //     const price = req.body.price;
+        //     const pic = req.files.img;
+        //     const picData = pic.data;
+        //     const encodedPic = picData.toString('base64');
+        //     const imgBuffer = Buffer.from(encodedPic, 'base64');
+        //     const orna = {
+        //         name,
+        //         details,
+        //         price,
+        //         img: imgBuffer
+        //     }
+        //     const result = await ornaCollection.insertOne(orna);
 
 
-            res.json(result);
-            console.log(result)
+        //     res.json(result);
+        //     console.log(result)
 
-        });
-        app.get('/orna', async (req, res) => {
-            const cursor = ornaCollection.find({})
-            const orna = await cursor.toArray();
-            res.json(orna);
-        })
+        // });
+        // app.get('/orna', async (req, res) => {
+        //     const cursor = ornaCollection.find({})
+        //     const orna = await cursor.toArray();
+        //     res.json(orna);
+        // })
 
-        app.get("/orna/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const ornaCollections = await ornaCollection.findOne(query)
-            res.json(ornaCollections);
-        });
+        // app.get("/orna/:id", async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const ornaCollections = await ornaCollection.findOne(query)
+        //     res.json(ornaCollections);
+        // });
 
-        app.delete("/orna/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const product = await ornaCollection.deleteOne(query);
-            res.json(product);
-        });
+        // app.delete("/orna/:id", async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const product = await ornaCollection.deleteOne(query);
+        //     res.json(product);
+        // });
 
         // package
-        app.post("/package", async (req, res) => {
-            const name = req.body.name;
-            const details = req.body.details;
-            const price = req.body.price;
-            const pic = req.files.img;
-            const picData = pic.data;
-            const encodedPic = picData.toString('base64');
-            const imgBuffer = Buffer.from(encodedPic, 'base64');
-            const package = {
-                name,
-                details,
-                price,
-                img: imgBuffer
-            }
-            const result = await packageCollection.insertOne(package);
+        // app.post("/package", async (req, res) => {
+        //     const name = req.body.name;
+        //     const details = req.body.details;
+        //     const price = req.body.price;
+        //     const pic = req.files.img;
+        //     const picData = pic.data;
+        //     const encodedPic = picData.toString('base64');
+        //     const imgBuffer = Buffer.from(encodedPic, 'base64');
+        //     const package = {
+        //         name,
+        //         details,
+        //         price,
+        //         img: imgBuffer
+        //     }
+        //     const result = await packageCollection.insertOne(package);
 
 
-            res.json(result);
+        //     res.json(result);
 
-        });
-        app.get('/package', async (req, res) => {
-            const cursor = packageCollection.find({})
-            const package = await cursor.toArray();
-            res.json(package);
-        })
+        // });
+        // app.get('/package', async (req, res) => {
+        //     const cursor = packageCollection.find({})
+        //     const package = await cursor.toArray();
+        //     res.json(package);
+        // })
 
-        app.get("/package/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const packageCollections = await packageCollection.findOne(query)
-            res.json(packageCollections);
-        });
+        // app.get("/package/:id", async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const packageCollections = await packageCollection.findOne(query)
+        //     res.json(packageCollections);
+        // });
 
-        app.delete("/package/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const product = await packageCollection.deleteOne(query);
-            res.json(product);
-        });
+        // app.delete("/package/:id", async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const product = await packageCollection.deleteOne(query);
+        //     res.json(product);
+        // });
 
 
         // coker
@@ -294,87 +296,87 @@ async function run() {
 
 
         // Blouse
-        app.post("/blouse", async (req, res) => {
-            const name = req.body.name;
-            const details = req.body.details;
-            const price = req.body.price;
-            const pic = req.files.img;
-            const picData = pic.data;
-            const encodedPic = picData.toString('base64');
-            const imgBuffer = Buffer.from(encodedPic, 'base64');
-            const blouse = {
-                name,
-                details,
-                price,
-                img: imgBuffer
-            }
-            const result = await blouseCollection.insertOne(blouse);
+        // app.post("/blouse", async (req, res) => {
+        //     const name = req.body.name;
+        //     const details = req.body.details;
+        //     const price = req.body.price;
+        //     const pic = req.files.img;
+        //     const picData = pic.data;
+        //     const encodedPic = picData.toString('base64');
+        //     const imgBuffer = Buffer.from(encodedPic, 'base64');
+        //     const blouse = {
+        //         name,
+        //         details,
+        //         price,
+        //         img: imgBuffer
+        //     }
+        //     const result = await blouseCollection.insertOne(blouse);
 
 
-            res.json(result);
-            // console.log(result)
-        });
-        app.get('/blouse', async (req, res) => {
-            const cursor = blouseCollection.find({})
-            const blouse = await cursor.toArray();
-            res.json(blouse);
-        })
+        //     res.json(result);
+        //     // console.log(result)
+        // });
+        // app.get('/blouse', async (req, res) => {
+        //     const cursor = blouseCollection.find({})
+        //     const blouse = await cursor.toArray();
+        //     res.json(blouse);
+        // })
 
-        app.get("/blouse/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const blouseCollections = await blouseCollection.findOne(query)
-            res.json(blouseCollections);
-        });
+        // app.get("/blouse/:id", async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const blouseCollections = await blouseCollection.findOne(query)
+        //     res.json(blouseCollections);
+        // });
 
-        app.delete("/blouse/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const product = await blouseCollection.deleteOne(query);
-            res.json(product);
-        });
+        // app.delete("/blouse/:id", async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const product = await blouseCollection.deleteOne(query);
+        //     res.json(product);
+        // });
 
-        // sawalar Kameez
-        app.post("/sawalar", async (req, res) => {
-            const name = req.body.name;
-            const details = req.body.details;
-            const price = req.body.price;
-            const pic = req.files.img;
-            const picData = pic.data;
-            const encodedPic = picData.toString('base64');
-            const imgBuffer = Buffer.from(encodedPic, 'base64');
-            const sawalar = {
-                name,
-                details,
-                price,
-                img: imgBuffer
-            }
-            const result = await sawalarCollection.insertOne(sawalar);
+        // // sawalar Kameez
+        // app.post("/sawalar", async (req, res) => {
+        //     const name = req.body.name;
+        //     const details = req.body.details;
+        //     const price = req.body.price;
+        //     const pic = req.files.img;
+        //     const picData = pic.data;
+        //     const encodedPic = picData.toString('base64');
+        //     const imgBuffer = Buffer.from(encodedPic, 'base64');
+        //     const sawalar = {
+        //         name,
+        //         details,
+        //         price,
+        //         img: imgBuffer
+        //     }
+        //     const result = await sawalarCollection.insertOne(sawalar);
 
 
-            res.json(result);
-            // console.log(result)
-        });
+        //     res.json(result);
+        //     // console.log(result)
+        // });
 
-        app.get('/sawalar', async (req, res) => {
-            const cursor = sawalarCollection.find({})
-            const sawalar = await cursor.toArray();
-            res.json(sawalar);
-        })
+        // app.get('/sawalar', async (req, res) => {
+        //     const cursor = sawalarCollection.find({})
+        //     const sawalar = await cursor.toArray();
+        //     res.json(sawalar);
+        // })
 
-        app.get("/sawalar/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const sawalarCollections = await sawalarCollection.findOne(query)
-            res.json(sawalarCollections);
-        });
+        // app.get("/sawalar/:id", async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const sawalarCollections = await sawalarCollection.findOne(query)
+        //     res.json(sawalarCollections);
+        // });
 
-        app.delete("/sawalar/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const product = await sawalarCollection.deleteOne(query);
-            res.json(product);
-        });
+        // app.delete("/sawalar/:id", async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const product = await sawalarCollection.deleteOne(query);
+        //     res.json(product);
+        // });
 
         // newin
         app.post("/newin", async (req, res) => {
@@ -457,89 +459,89 @@ async function run() {
 
         // saree
 
-        app.post("/saree", async (req, res) => {
-            const name = req.body.name;
-            const details = req.body.details;
-            const price = req.body.price;
-            const pic = req.files.img;
-            const picData = pic.data;
-            const encodedPic = picData.toString('base64');
-            const imgBuffer = Buffer.from(encodedPic, 'base64');
-            const saree = {
-                name,
-                details,
-                price,
-                img: imgBuffer
-            }
-            const result = await sareeCollection.insertOne(saree);
+        // app.post("/saree", async (req, res) => {
+        //     const name = req.body.name;
+        //     const details = req.body.details;
+        //     const price = req.body.price;
+        //     const pic = req.files.img;
+        //     const picData = pic.data;
+        //     const encodedPic = picData.toString('base64');
+        //     const imgBuffer = Buffer.from(encodedPic, 'base64');
+        //     const saree = {
+        //         name,
+        //         details,
+        //         price,
+        //         img: imgBuffer
+        //     }
+        //     const result = await sareeCollection.insertOne(saree);
 
 
-            res.json(result);
+        //     res.json(result);
 
-        });
+        // });
 
-        app.get('/saree', async (req, res) => {
-            const cursor = sareeCollection.find({})
-            const saree = await cursor.toArray();
-            res.json(saree);
-        })
+        // app.get('/saree', async (req, res) => {
+        //     const cursor = sareeCollection.find({})
+        //     const saree = await cursor.toArray();
+        //     res.json(saree);
+        // })
 
-        app.get("/saree/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const sareeCollection = await sareeCollection.findOne(query)
-            res.json(sareeCollection);
-        });
+        // app.get("/saree/:id", async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const sareeCollection = await sareeCollection.findOne(query)
+        //     res.json(sareeCollection);
+        // });
 
-        app.delete("/saree/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const product = await sareeCollection.deleteOne(query);
-            res.json(product);
-        });
+        // app.delete("/saree/:id", async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const product = await sareeCollection.deleteOne(query);
+        //     res.json(product);
+        // });
 
         // bestSells
-        app.post("/bestsells", async (req, res) => {
-            const name = req.body.name;
-            const details = req.body.details;
-            const price = req.body.price;
-            const pic = req.files.img;
-            const picData = pic.data;
-            const encodedPic = picData.toString('base64');
-            const imgBuffer = Buffer.from(encodedPic, 'base64');
-            const kurti = {
-                name,
-                details,
-                price,
-                img: imgBuffer
-            }
-            const result = await bestSellsCollection.insertOne(kurti);
+        // app.post("/bestsells", async (req, res) => {
+        //     const name = req.body.name;
+        //     const details = req.body.details;
+        //     const price = req.body.price;
+        //     const pic = req.files.img;
+        //     const picData = pic.data;
+        //     const encodedPic = picData.toString('base64');
+        //     const imgBuffer = Buffer.from(encodedPic, 'base64');
+        //     const kurti = {
+        //         name,
+        //         details,
+        //         price,
+        //         img: imgBuffer
+        //     }
+        //     const result = await bestSellsCollection.insertOne(kurti);
 
 
-            res.json(result);
-            // console.log(result)
-        });
+        //     res.json(result);
+        //     // console.log(result)
+        // });
 
-        app.get('/bestsells', async (req, res) => {
-            const cursor = bestSellsCollection.find({})
-            const bestSells = await cursor.toArray();
-            res.json(bestSells);
-        })
+        // app.get('/bestsells', async (req, res) => {
+        //     const cursor = bestSellsCollection.find({})
+        //     const bestSells = await cursor.toArray();
+        //     res.json(bestSells);
+        // })
 
-        app.get("/bestsells/:id", async (req, res) => {
-            const id = req.params.id;
+        // app.get("/bestsells/:id", async (req, res) => {
+        //     const id = req.params.id;
 
-            const query = { _id: ObjectId(id) };
-            const BestSellsProduct = await bestSellsCollection.findOne(query)
-            res.json(BestSellsProduct);
-        });
+        //     const query = { _id: ObjectId(id) };
+        //     const BestSellsProduct = await bestSellsCollection.findOne(query)
+        //     res.json(BestSellsProduct);
+        // });
 
-        app.delete("/bestsells/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const product = await bestSellsCollection.deleteOne(query);
-            res.json(product);
-        });
+        // app.delete("/bestsells/:id", async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const product = await bestSellsCollection.deleteOne(query);
+        //     res.json(product);
+        // });
 
 
         // kurti 
